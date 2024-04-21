@@ -1,36 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import Header from './components/Header';
+import Cards from './components/Cards';
+import ScoreBoard from './components/ScoreBoard';
+import './styles/main.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [clickedCardsSet, setClickedCardsSet] = useState(new Set());
+  const [attemptsLeft, setAttemptsLeft] = useState(12);
 
-  return (
-    /*  */
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+  // initialise cards display by calling an API
+
+  function handleCardClick(cardId) {
+    if (!clickedCardsSet.has(cardId)) {
+      const newSet = new Set(clickedCardsSet);
+      newSet.add(cardId);
+      setClickedCardsSet(newSet);
+
+      const newScore = currentScore + 1;
+      setCurrentScore(newScore);
+
+      const newBestScore = newScore > bestScore ? newScore : bestScore;
+      setBestScore(newBestScore);
+    }
+    setClickedCardsSet(new Set([...clickedCardsSet, cardId]));
+    const attemptsRemaining = attemptsLeft - 1;
+    setAttemptsLeft(attemptsRemaining);
+  }
+
+  function restartGame() {
+    setCurrentScore(0);
+    setAttemptsLeft(12);
+    setClickedCardsSet(new Set());
+    console.log(clickedCardsSet);
+  }
+
+  if (attemptsLeft <= 0) {
+    return (
+      <div id="gameOver">
+        <h1>GameOver</h1>
+        <h2>Your Score: {currentScore}</h2>
+        <h2>Best Score: {bestScore}</h2>
+        <button onClick={restartGame} className="restartBtn">
+          Restart
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+    );
+  } else {
+    return (
+      /*  */
+      <div id="mainContainer">
+        <Header />
+        <ScoreBoard
+          currentScore={currentScore}
+          bestScore={bestScore}
+          attemptsLeft={attemptsLeft}
+        />
+        <Cards handleCardClick={handleCardClick} />
+      </div>
+    );
+  }
 }
 
 export default App;
