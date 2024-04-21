@@ -4,7 +4,7 @@
 }
 
 #mainContainer {
-  width: 100vw;
+  max-width: 100vw;
   display: grid;
   grid-template-columns: 5fr 1fr;
   grid-template-rows: 0.5fr 5fr;
@@ -21,6 +21,9 @@
     padding-top: 0.5rem;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   #scoreBoard {
@@ -41,12 +44,19 @@
     padding-top: 2rem;
     grid-column: 1 / -1;
     grid-row: 2 / 3;
-    display: grid;
+    /* display: grid;
     gap: 10px; /* Gap between grid items *
 
     /* Use auto-fill to maintain a dynamic number of columns */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
 
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 3rem;
+    row-gap: 3rem;
+
+    justify-content: center;
+    align-items: center;
     /* Styles for individual grid items */
     img {
       margin: auto;
